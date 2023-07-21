@@ -4,7 +4,8 @@ import com.example.spring.jwt.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JwtRepository {
-    void memberSave(Member member);
 
     Member findByUsername(String username);
+
+    void memberSave(Member member);
 }

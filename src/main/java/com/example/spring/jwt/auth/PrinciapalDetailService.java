@@ -17,7 +17,9 @@ public class PrinciapalDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("여기왔어?");
         Member member=jwtRepository.findByUsername(username);
-        return null;
+        System.out.println(member.getUsername());
+        return new PrinciapalDetails(member);
     }
 }

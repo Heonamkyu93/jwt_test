@@ -1,14 +1,19 @@
 package com.example.spring.jwt.config;
 
+import com.example.spring.jwt.filter.JwtLoginFilter;
 import com.example.spring.jwt.filter.MyFilter1;
 import com.example.spring.jwt.filter.MyFilter3;
 import lombok.Data;
+import oracle.net.aso.f;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
@@ -18,11 +23,12 @@ import org.springframework.web.filter.CorsFilter;
 @Data
 public class SecurityConifg {
     private final CorsFilter corsFilter;
+    private final AuthenticationManager authenticationManager;
 
-    public SecurityConifg(CorsFilter corsFilter) {
+    public SecurityConifg(CorsFilter corsFilter, AuthenticationManager authenticationManager) {
         this.corsFilter = corsFilter;
+        this.authenticationManager = authenticationManager;
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,6 +38,7 @@ public class SecurityConifg {
                 .formLogin(AbstractHttpConfigurer::disable)    //일반 로그인처리 사용안함
                 .httpBasic(AbstractHttpConfigurer::disable)     // 일반 아이디 비밀번호 들고다니면서 사용자 확인하는거 사용안함
                 .addFilter(corsFilter)      //  인증이 있을경우 시큐리티 필터에 등록해줘야함  corsFilter 에가면 여러가지 설정을 다허용하는데 그래서 보안 cors정책을 안받는거
+                .addFilter(new JwtLoginFilter(authenticationManager))    // 로그인이기 때문에 AuthenticationManager 을 줘야함
                 //   컨트롤러에 @CrossOrigin 어노태이션을 걸면 인증이 필요한 요청은 다 거부된다 인증이 필요하지않은 요청만 있을경우 사용
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/api/user/**").authenticated()
@@ -41,6 +48,7 @@ public class SecurityConifg {
                         .requestMatchers("/api/admin/**").access("hasAnyRole('ROLE_ADMIN')")
                         .anyRequest().permitAll()
                 );
+             //   .formLogin(f -> f.loginProcessingUrl("/login"));  disable 이라 동작을 안함 필터를 따로 만들어야함
         return http.build();
     }
 
