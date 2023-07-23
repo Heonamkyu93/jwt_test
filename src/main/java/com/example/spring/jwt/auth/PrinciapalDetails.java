@@ -1,12 +1,13 @@
 package com.example.spring.jwt.auth;
 
 import com.example.spring.jwt.domain.Member;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+@Data
 public class PrinciapalDetails implements UserDetails {
 
     private final Member member;
@@ -18,10 +19,10 @@ public class PrinciapalDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        member.getRoleList().forEach(r ->{
-            authorities.add(()->r);
+        authorities.add(()->{
+            return member.getRoles();
         });
-        return null;
+        return authorities;
     }
 
     @Override

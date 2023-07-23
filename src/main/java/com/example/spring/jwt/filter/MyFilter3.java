@@ -20,10 +20,9 @@ public class MyFilter3 implements Filter {
         // 요청할때마다 header 에 Authorization에 value 값으로 토큰을 가져옴 
         // 그때 내가 만든 토큰인지 검증하면 됨 (RSA , HS256)
             if(req.getMethod().equals("POST")){
-
                 System.out.println(headerAuth);
             }
-            if(headerAuth.equals("cos")){
+            if(headerAuth.equals("Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiLthqDtgbAiLCJleHAiOjE2OTAwNzA2MDgsInVzZXJuYW1lIjoidXNlciJ9.4HEZr5KOrywZZ8aE3L38angf7iqmt4aeobg-AyVjU6-nxV3Hke8adBNhemGxrFgznF9umqbtCDSN1qcyN_IapQ")){
                 chain.doFilter(req,res);
             }else{
                 System.out.println("인증 ㄴㄴ");

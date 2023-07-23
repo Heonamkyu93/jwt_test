@@ -29,7 +29,7 @@ public class JwtRepoDb implements JwtRepository {
 
     @Override
     public Member findByUsername(String username) {
-        String sql = "SELECT j FROM jwt WHERE j.username = :username";
+        String sql = "SELECT j FROM member j WHERE j.username = :username";
         return entityManager.createQuery(sql,Member.class)
                 .setParameter("username", username)
                 .getSingleResult();

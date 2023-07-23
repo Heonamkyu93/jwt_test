@@ -34,7 +34,7 @@ public class RestApiController {
     public String save(@ModelAttribute Member member) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setRoles("ROLE_USER,ROLE_ADMIN,ROLE_MANAGER");
+        member.setRoles("ROLE_ADMIN");
         jwtRepository.memberSave(member);
         return "home";
     }
@@ -42,5 +42,16 @@ public class RestApiController {
     public String savego(){
         return "save";
     }
-
+    @GetMapping("/api/user/te")
+    public String user(){
+        return "te1";
+    }
+    @GetMapping("/api/admin/te")
+    public @ResponseBody String  admin(){
+        return "te2";
+    }
+    @GetMapping("/api/member/te")
+    public String member(){
+        return "te3";
+    }
 }
